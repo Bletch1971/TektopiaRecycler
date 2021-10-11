@@ -1,0 +1,23 @@
+{
+    "modListVersion": 2,
+    "modList": [{
+        "modid": "tektopiarecycler",
+        "name": "Tektopia Recycler",
+        "description": "§fThis extension adds a village recycler for use with §bTektopia§a ${tektopia_version}§f.
+§fBuilt with:
+    §bForge§f ${forge_version}",
+        "version": "${mod_version}",
+        "mcversion": "${minecraft_version}",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/tektopia-recycler",
+        "updateUrl": "https://github.com/Bletch1971/TektopiaRecycler",
+        "authorList": ["§6Bletch§r"],
+        "credits": "TangoTek for creating the TekTopia mod",
+        "logoFile": "assets/tektopiarecycler/textures/logo.png",
+        "screenshots": [],
+        "parent": "",
+        "requiredMods": ["tektopia"],
+        "dependencies": [],
+        "dependants": [],
+        "useDependencyInformation": true
+    }]
+}

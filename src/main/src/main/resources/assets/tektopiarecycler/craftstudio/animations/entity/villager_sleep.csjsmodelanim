@@ -1,0 +1,57 @@
+{
+  "title": "villager_sleep",
+  "duration": 180,
+  "holdLastKeyframe": false,
+  "nodeAnimations": {
+    "BodyInner": {
+      "position": {
+        "0": [ 0, -11, -3 ],
+        "180": [ 0, -11, -3 ]
+      },
+      "offsetFromPivot": {
+      },
+      "size": {
+      },
+      "rotation": {
+        "0": [ -90, 360, 0 ],
+        "180": [ -90, -360, 0 ]
+      },
+      "stretch": {
+        "0": [ 0, 0, 0 ],
+        "68": [ 0.02999997, 0.02999997, 0.02999997 ],
+        "120": [ 0, 0, 0 ],
+        "164": [ 0, 0, 0 ],
+        "180": [ 0, 0, 0 ]
+      }
+    },
+    "Nose": {
+      "position": {
+      },
+      "offsetFromPivot": {
+      },
+      "size": {
+      },
+      "rotation": {
+        "82": [ 0, 0, 0 ],
+        "108": [ -9.697315, 0, 0 ],
+        "142": [ 0, 0, 0 ]
+      },
+      "stretch": {
+      }
+    },
+    "EyeLids": {
+      "position": {
+        "0": [ 0, 0, 0.5999999 ],
+        "180": [ 0, 0, 0.5999999 ]
+      },
+      "offsetFromPivot": {
+      },
+      "size": {
+      },
+      "rotation": {
+      },
+      "stretch": {
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+#en_US
+#This is the Main language configuration file
+#
+#If you want to color code the text then I recommend you visit http://www.minecraftwiki.net/wiki/Formatting_codes#Color_codes
+#To create the § symbol which is used for assigning a color to the following text press Alt + 21 on Windows. For other OSes, view the above link.
+#This file needs to be UTF-8 encoded to work with MC 1.7+
+
+# Formatting codes
+# Code	Name
+# §0	black
+# §1	dark_blue
+# §2	dark_green
+# §3	dark_aqua
+# §4	dark_red
+# §5	dark_purple	
+# §6	gold
+# §7	gray
+# §8	dark_gray
+# §9	blue
+# §a	green
+# §b	aqua
+# §c	red
+# §d	light_purple
+# §e	yellow
+# §f	white
+
+# §k	Obfuscated
+# §l	Bold
+# §m	Strikethrough
+# §n	Underline
+# §o	Italic
+# §r	Reset
+
+
+#==========
+#= Config =
+#==========
+
+#== Recycler ==
+config.recycler=Recycler
+config.recycler.tooltip=Recycler settings
+
+config.recycler.recyclecostpercentage=Emerald Cost Percentage 
+config.recycler.recyclecostpercentage.tooltip=The percentage of emeralds returned per recycle, based on the token cost. Minimum is 1 and Maximum is 100.
+config.recycler.recyclesperday=Recycles Per Day
+config.recycler.recyclesperday.tooltip=The number of recycles that can be made for each item per day. Minimum is 1 and Maximum is 99999.
+config.recycler.checksvillagesize=Checks Village Size
+config.recycler.checksvillagesize.tooltip=If enabled, when trying to spawn a recycler it will check the size of the village. The more villagers the less often the recycler will spawn.
+
+
+#============
+#= Commands =
+#============
+commands.recycler.usage=/recycler
+commands.recycler.spawn.usage=/recycler spawn <0|1>
+commands.recycler.spawn.success=§aRecycler has appeared at %s
+commands.recycler.spawn.failed=§cRecycler spawn failed
+commands.recycler.spawn.badconditions=§cRecycler spawn failed...spawn conditions not valid
+commands.recycler.spawn.exists=§eRecycler spawn failed...Recycler already located in the village
+commands.recycler.spawn.noposition=§cRecycler spawn failed...no spawn position found
+commands.recycler.spawn.novillage=§cRecycler spawn failed...no village found
+
+#=================
+#= Chat Messages =
+#=================
+
+message.recycler.exists=§eRecycler already located in the village
+message.recycler.noposition=§cCould not find a spawn location for the Recycler
+message.recycler.spawned=§aRecycler has appeared at %s
+
+
+#============
+#= Entities =
+#============
+
+entity.recycler.name=Recycler
+entity.recycler.information=§bThe Recycler is a vendor that wanders into your village. A player can interact with them to recycle unwanted structure and profession tokens for emeralds.

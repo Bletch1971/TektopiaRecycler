@@ -1,0 +1,171 @@
+{
+  "title": "villager_sit",
+  "duration": 180,
+  "holdLastKeyframe": false,
+  "nodeAnimations": {
+    "Waist": {
+      "position": {
+      },
+      "offsetFromPivot": {
+      },
+      "size": {
+      },
+      "rotation": {
+        "0": [ -90, 0, 0 ],
+        "180": [ -90, 0, 0 ]
+      },
+      "stretch": {
+      }
+    },
+    "LegLeftLow": {
+      "position": {
+      },
+      "offsetFromPivot": {
+      },
+      "size": {
+      },
+      "rotation": {
+        "0": [ 87.49204, 0, 0 ],
+        "180": [ 87.49001, 0, 0 ]
+      },
+      "stretch": {
+      }
+    },
+    "LegRightLow": {
+      "position": {
+      },
+      "offsetFromPivot": {
+      },
+      "size": {
+      },
+      "rotation": {
+        "0": [ 89.37354, 180, 180 ],
+        "180": [ 89.36964, -180, -180 ]
+      },
+      "stretch": {
+      }
+    },
+    "LegLeft": {
+      "position": {
+      },
+      "offsetFromPivot": {
+      },
+      "size": {
+      },
+      "rotation": {
+        "0": [ 0, 0, 3 ]
+      },
+      "stretch": {
+      }
+    },
+    "LegRight": {
+      "position": {
+      },
+      "offsetFromPivot": {
+      },
+      "size": {
+      },
+      "rotation": {
+        "0": [ 0, 0, -3 ]
+      },
+      "stretch": {
+      }
+    },
+    "BodyInner": {
+      "position": {
+        "0": [ 0, -5, 0 ],
+        "94": [ 0, -5, 0 ],
+        "180": [ 0, -5, 0 ]
+      },
+      "offsetFromPivot": {
+      },
+      "size": {
+      },
+      "rotation": {
+      },
+      "stretch": {
+        "0": [ 0, 0, 0 ],
+        "94": [ 0, 0.01999998, 0 ],
+        "180": [ 0, 0, 0 ]
+      }
+    },
+    "ArmRight": {
+      "position": {
+        "0": [ 0, 0, 0 ],
+        "94": [ 0, 0.0999999, 0 ],
+        "180": [ 0, 0, 0 ]
+      },
+      "offsetFromPivot": {
+      },
+      "size": {
+      },
+      "rotation": {
+        "0": [ -50, 0, 0 ],
+        "180": [ -50, 0, 0 ]
+      },
+      "stretch": {
+      }
+    },
+    "ArmRightLower": {
+      "position": {
+      },
+      "offsetFromPivot": {
+      },
+      "size": {
+      },
+      "rotation": {
+        "0": [ 0, 0, 35 ],
+        "180": [ 0, 0, 35 ]
+      },
+      "stretch": {
+      }
+    },
+    "ArmLeft": {
+      "position": {
+        "0": [ 0, 0, 0 ],
+        "94": [ 0, 0.0999999, 0 ],
+        "180": [ 0, 0, 0 ]
+      },
+      "offsetFromPivot": {
+      },
+      "size": {
+      },
+      "rotation": {
+        "0": [ -51.03636, 0, 0 ],
+        "180": [ -51.03636, 0, 0 ]
+      },
+      "stretch": {
+      }
+    },
+    "ArmLeftLower": {
+      "position": {
+      },
+      "offsetFromPivot": {
+      },
+      "size": {
+      },
+      "rotation": {
+        "0": [ 0, 0, -35 ],
+        "180": [ 0, 0, -35 ]
+      },
+      "stretch": {
+      }
+    },
+    "Head": {
+      "position": {
+      },
+      "offsetFromPivot": {
+      },
+      "size": {
+      },
+      "rotation": {
+        "0": [ 0, 0, 0 ],
+        "60": [ 0, 2, 0 ],
+        "128": [ 0, -3, 0 ],
+        "180": [ 0, 0, 0 ]
+      },
+      "stretch": {
+      }
+    }
+  }
+}
