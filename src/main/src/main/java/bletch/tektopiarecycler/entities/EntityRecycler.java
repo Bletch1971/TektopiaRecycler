@@ -57,11 +57,11 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant {
 	public static final String RESOURCE_PATH = "recycler";
 	public static final String ANIMATION_MODEL_NAME = MODEL_NAME + "_m";
 
+	protected static final DataParameter<Integer> RECYCLER_TYPE;
 	protected static final DataParameter<String> ANIMATION_KEY;
 	protected static final AnimationHandler<EntityRecycler> animationHandler;
 	
 	private static final List<Integer> recyclerTypes = Arrays.asList(0, 1); // 0 = Structure Tokens, 1 = Profession Tokens
-	private int recyclerType = 0;
 
 	private BlockPos firstCheck;
 	@Nullable
@@ -75,8 +75,9 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant {
 
 	public EntityRecycler(World worldIn, int recyclerType) {
 		super(worldIn, (ProfessionType)null, VillagerRole.VENDOR.value | VillagerRole.VISITOR.value);
-		this.recyclerType = recyclerType;
 		this.sleepOffset = getSleepOffset();
+		
+		setRecyclerType(recyclerType);
 	}
 
 	public EntityRecycler(World worldIn, Village village, int recyclerType) {
@@ -89,9 +90,7 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant {
 	}
 
 	public int getRecyclerType() {
-		return isRecyclerTypeValid(this.recyclerType) 
-				? this.recyclerType 
-				: 0;
+		return this.dataManager.get(RECYCLER_TYPE);
 	}
 	
 	public static Boolean isRecyclerTypeValid(int recyclerType) {
@@ -104,7 +103,12 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant {
 	}
 	
 	public boolean isMale() {
-		return this.recyclerType == 0;
+		int recyclerType = this.getRecyclerType();
+		return recyclerType == 0;
+	}
+	
+	public void setRecyclerType(int recyclerType) {
+		this.dataManager.set(RECYCLER_TYPE, isRecyclerTypeValid(recyclerType) ? recyclerType : Integer.valueOf(0));
 	}
 	
 	protected void setupServerJobs() {
@@ -260,7 +264,7 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant {
 			
 			List<Item> itemList = null;
 			
-			switch(this.recyclerType) {
+			switch(this.getRecyclerType()) {
 			case 0:
 				itemList = Arrays.asList(ModItems.structureTokens);
 				break;
@@ -352,7 +356,7 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant {
 	public void func_70014_b(NBTTagCompound compound) {
 		super.func_70014_b(compound);
 		
-		compound.setInteger("recyclerType", this.recyclerType);
+		compound.setInteger("recyclerType", this.getRecyclerType());
 		if (this.vendorList != null) {
 			compound.setTag("Offers", this.vendorList.getRecipiesAsTags());
 		}
@@ -363,8 +367,7 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant {
 		super.func_70037_a(compound);
 
 		if (compound.hasKey("recyclerType")) {
-			int recyclerType = compound.getInteger("recyclerType");
-			this.recyclerType = isRecyclerTypeValid(recyclerType) ? recyclerType : 0;
+			setRecyclerType(compound.getInteger("recyclerType"));
 		}
 		if (compound.hasKey("Offers", 10)) {
 			NBTTagCompound nbttagcompound = compound.getCompoundTag("Offers");
@@ -373,6 +376,7 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant {
 	}
 
 	static {
+		RECYCLER_TYPE = EntityDataManager.createKey(EntityRecycler.class, DataSerializers.VARINT);
 		ANIMATION_KEY = EntityDataManager.createKey(EntityRecycler.class, DataSerializers.STRING);
 		
 		animationHandler = TekVillager.getNewAnimationHandler(EntityRecycler.class);
@@ -425,11 +429,13 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant {
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
+		this.dataManager.set(RECYCLER_TYPE, Integer.valueOf(0));
 		this.dataManager.set(ANIMATION_KEY, "");
 	}
 
 	@Override
 	protected void entityInit() {
+		this.dataManager.register(RECYCLER_TYPE, Integer.valueOf(0));
 		this.dataManager.register(ANIMATION_KEY, "");
 		super.entityInit();
 	}
