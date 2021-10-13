@@ -13,7 +13,7 @@ import com.leviathanstudio.craftstudio.common.animation.AnimationHandler;
 import bletch.tektopiarecycler.core.ModConfig;
 import bletch.tektopiarecycler.core.ModDetails;
 import bletch.tektopiarecycler.core.ModEntities;
-import bletch.tektopiarecycler.entities.ai.EntityAIVisitTownHall;
+import bletch.tektopiarecycler.entities.ai.EntityAIRecyclerPatrolPoint;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -160,7 +160,7 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant {
 			this.setDead();
 		}));
 		
-		this.addTask(50, new EntityAIVisitTownHall(this, (p) -> {
+		this.addTask(50, new EntityAIRecyclerPatrolPoint(this, (p) -> {
 			return this.hasVillage();
 		}, 3, 60));
 		
