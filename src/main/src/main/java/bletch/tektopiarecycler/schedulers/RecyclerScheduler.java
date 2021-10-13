@@ -58,7 +58,7 @@ public class RecyclerScheduler implements IScheduler {
 				
 				if (villageLevel > 0 && villageCheck == 0) {
 					
-					LoggerUtils.debug(TextUtils.translate("message.trader.villagechecksuccess", new Object[] { villageLevel, villageCheck }), true);
+					LoggerUtils.info(TextUtils.translate("message.trader.villagechecksuccess", new Object[] { villageLevel, villageCheck }), true);
 					
 					// get a list of the Recyclers in the village
 					if (entityList == null)
@@ -72,18 +72,18 @@ public class RecyclerScheduler implements IScheduler {
 						// attempt spawn
 						if (TektopiaUtils.trySpawnEntity(world, spawnPosition, (World w) -> new EntityRecycler(w, recyclerType))) {
 							v.sendChatMessage(new TextComponentTranslation("message.recycler.spawned", new Object[] { TektopiaUtils.formatBlockPos(spawnPosition) }));
-							LoggerUtils.debug(TextUtils.translate("message.recycler.spawned", new Object[] { TektopiaUtils.formatBlockPos(spawnPosition) }), true);
+							LoggerUtils.info(TextUtils.translate("message.recycler.spawned", new Object[] { TektopiaUtils.formatBlockPos(spawnPosition) }), true);
 						} else {
 							v.sendChatMessage(new TextComponentTranslation("message.recycler.noposition", new Object[0]));
-							LoggerUtils.debug(TextUtils.translate("message.recycler.noposition", new Object[0]), true);
+							LoggerUtils.info(TextUtils.translate("message.recycler.noposition", new Object[0]), true);
 						}
 						
 					} else {
-						LoggerUtils.debug(TextUtils.translate("message.recycler.exists", new Object[0]), true);
+						LoggerUtils.info(TextUtils.translate("message.recycler.exists", new Object[0]), true);
 					}
 					
 				} else {
-					LoggerUtils.debug(TextUtils.translate("message.recycler.villagecheckfailed", new Object[] { villageLevel, villageCheck }), true);
+					LoggerUtils.info(TextUtils.translate("message.recycler.villagecheckfailed", new Object[] { villageLevel, villageCheck }), true);
 				}
 			}
 		});

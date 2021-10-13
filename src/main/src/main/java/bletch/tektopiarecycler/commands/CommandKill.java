@@ -1,26 +1,25 @@
 package bletch.tektopiarecycler.commands;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import bletch.tektopiarecycler.core.ModCommands;
 import bletch.tektopiarecycler.entities.EntityRecycler;
 import bletch.tektopiarecycler.utils.LoggerUtils;
-import bletch.tektopiarecycler.utils.TektopiaUtils;
 import bletch.tektopiarecycler.utils.TextUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.tangotek.tektopia.Village;
 import net.tangotek.tektopia.VillageManager;
 
-public class CommandSpawn extends CommandVillageBase {
+public class CommandKill extends CommandVillageBase {
 
-	private static final String COMMAND_NAME = "spawn";
+	private static final String COMMAND_NAME = "kill";
 	
-	public CommandSpawn() {
+	public CommandKill() {
 		super(COMMAND_NAME);
 	}
 
@@ -46,12 +45,6 @@ public class CommandSpawn extends CommandVillageBase {
 		EntityPlayer entityPlayer = super.getCommandSenderAsPlayer(sender);
 		World world = entityPlayer != null ? entityPlayer.getEntityWorld() : null;
 		
-		if (world == null || world.isRaining() || Village.isNightTime(world)) {
-			notifyCommandListener(sender, this, ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".badconditions", new Object[0]);
-			LoggerUtils.info(TextUtils.translate(ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".badconditions", new Object[0]), true);
-			return;
-		}
-		
 		VillageManager villageManager = world != null ? VillageManager.get(world) : null;
 		Village village = villageManager != null && entityPlayer != null ? villageManager.getVillageAt(entityPlayer.getPosition()) : null;
 		if (village == null) {
@@ -60,32 +53,25 @@ public class CommandSpawn extends CommandVillageBase {
 			return;
 		}
 
-		BlockPos spawnPosition = village.getEdgeNode();
-		if (spawnPosition == null) {
-			notifyCommandListener(sender, this, ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".noposition", new Object[0]);
-			LoggerUtils.info(TextUtils.translate(ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".noposition", new Object[0]), true);
-			return;
-		}
-
         List<EntityRecycler> entityList = world.getEntitiesWithinAABB(EntityRecycler.class, village.getAABB().grow(Village.VILLAGE_SIZE));
-		long recyclerTypeCount = entityList.stream().filter((r) -> r.getRecyclerType() == recyclerType).count();
-        if (recyclerTypeCount > 0) {
-			notifyCommandListener(sender, this, ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".exists", new Object[0]);
-			LoggerUtils.info(TextUtils.translate(ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".exists", new Object[0]), true);
+		entityList = entityList.stream()
+				.filter((r) -> r.getRecyclerType() == recyclerType)
+				.collect(Collectors.toList());
+        if (entityList.size() == 0) {
+			notifyCommandListener(sender, this, ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".noexists", new Object[0]);
+			LoggerUtils.info(TextUtils.translate(ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".noexists", new Object[0]), true);
 			return;
         }
         
-		// attempt to spawn the recycler
-		Boolean entitySpawned = TektopiaUtils.trySpawnEntity(world, spawnPosition, (World w) -> new EntityRecycler(w, recyclerType));
-		
-		if (!entitySpawned) {
-			notifyCommandListener(sender, this, ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".failed", new Object[0]);
-			LoggerUtils.info(TextUtils.translate(ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".failed", new Object[0]), true);
-			return;
-		}
-		
-		notifyCommandListener(sender, this, ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".success", new Object[] { TektopiaUtils.formatBlockPos(spawnPosition) });
-		LoggerUtils.info(TextUtils.translate(ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".success", new Object[] { TektopiaUtils.formatBlockPos(spawnPosition) }), true);
+        for (EntityRecycler entity : entityList) {
+        	if (entity.isDead)
+        		continue;
+        	
+        	entity.setDead();
+    		
+    		notifyCommandListener(sender, this, ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".success", new Object[0]);
+    		LoggerUtils.info(TextUtils.translate(ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".success", new Object[0]), true);
+        }
 	}
     
 }

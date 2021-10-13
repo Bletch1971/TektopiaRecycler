@@ -31,7 +31,7 @@ public class ModClientProxy extends ModCommonProxy {
 	public void registerCraftStudioAnimations() {
 		super.registerCraftStudioAnimations();
 		
-		LoggerUtils.debug("Starting registerCraftStudioAnimations...");
+		LoggerUtils.info("Starting registerCraftStudioAnimations...");
 		
 		this.registry.register(EnumResourceType.ANIM, EnumRenderType.ENTITY, ModEntities.ANIMATION_VILLAGER_EAT);
 		this.registry.register(EnumResourceType.ANIM, EnumRenderType.ENTITY, ModEntities.ANIMATION_VILLAGER_READ);
@@ -42,18 +42,18 @@ public class ModClientProxy extends ModCommonProxy {
 		this.registry.register(EnumResourceType.ANIM, EnumRenderType.ENTITY, ModEntities.ANIMATION_VILLAGER_WALK);
 		this.registry.register(EnumResourceType.ANIM, EnumRenderType.ENTITY, ModEntities.ANIMATION_VILLAGER_WALKSAD);
 		
-		LoggerUtils.debug("Finished registerCraftStudioAnimations...");
+		LoggerUtils.info("Finished registerCraftStudioAnimations...");
 	}	
 	
 	@Override
 	public void registerCraftStudioModels() {
 		super.registerCraftStudioModels();
 		
-		LoggerUtils.debug("Starting registerCraftStudioModels...");
+		LoggerUtils.info("Starting registerCraftStudioModels...");
 		
 		registry.register(EnumResourceType.MODEL, EnumRenderType.ENTITY, EntityRecycler.ANIMATION_MODEL_NAME);
 		
-		LoggerUtils.debug("Finished registerCraftStudioModels...");
+		LoggerUtils.info("Finished registerCraftStudioModels...");
 	}
 		
 }
