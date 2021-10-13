@@ -77,11 +77,13 @@ commands.recycler.kill.success=§aRecycler has been killed
 #= Chat Messages =
 #=================
 
-message.recycler.exists=§eRecycler already located in the village
+message.recycler.exists=§eRecycler already located in village %s
 message.recycler.noposition=§cCould not find a spawn location for the Recycler
+message.recycler.noposition.village=§cCould not find a spawn location for the Recycler in village %s
 message.recycler.spawned=§aRecycler has appeared at %s
-message.recycler.villagecheckfailed=§cRecycler village check failed, village size %s; check value %s
-message.recycler.villagechecksuccess=§cRecycler village check success, village size %s; check value %s
+message.recycler.spawned.village=§aRecycler has appeared in village %s at %s
+message.recycler.villagecheckfailed=§cRecycler village check failed, village  %s; size %s; check value %s
+message.recycler.villagechecksuccess=§cRecycler village check success, village  %s; size %s; check value %s
 
 
 #============
