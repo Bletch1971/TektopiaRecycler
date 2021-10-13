@@ -36,6 +36,13 @@
 #= Config =
 #==========
 
+#== Debug ==
+config.debug=Debug
+config.debug.tooltip=Debug settings
+
+config.debug.enableDebug=Enable Debug
+config.debug.enableDebug.tooltip=If true, debug information will be output to the console.
+
 #== Recycler ==
 config.recycler=Recycler
 config.recycler.tooltip=Recycler settings
@@ -67,6 +74,8 @@ commands.recycler.spawn.novillage=§cRecycler spawn failed...no village found
 message.recycler.exists=§eRecycler already located in the village
 message.recycler.noposition=§cCould not find a spawn location for the Recycler
 message.recycler.spawned=§aRecycler has appeared at %s
+message.recycler.villagecheckfailed=§cRecycler village check failed, village size %s; check value %s
+message.recycler.villagechecksuccess=§cRecycler village check success, village size %s; check value %s
 
 
 #============

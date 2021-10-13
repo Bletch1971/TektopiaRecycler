@@ -3,7 +3,9 @@ package bletch.tektopiarecycler.commands;
 import java.util.List;
 import bletch.tektopiarecycler.core.ModCommands;
 import bletch.tektopiarecycler.entities.EntityRecycler;
+import bletch.tektopiarecycler.utils.LoggerUtils;
 import bletch.tektopiarecycler.utils.TektopiaUtils;
+import bletch.tektopiarecycler.utils.TextUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -46,6 +48,7 @@ public class CommandSpawn extends CommandVillageBase {
 		
 		if (world == null || world.isRaining() || Village.isNightTime(world)) {
 			notifyCommandListener(sender, this, "commands.recycler.spawn.badconditions", new Object[0]);
+			LoggerUtils.debug(TextUtils.translate("commands.recycler.spawn.badconditions", new Object[0]), true);
 			return;
 		}
 		
@@ -53,12 +56,14 @@ public class CommandSpawn extends CommandVillageBase {
 		Village village = villageManager != null && entityPlayer != null ? villageManager.getVillageAt(entityPlayer.getPosition()) : null;
 		if (village == null) {
 			notifyCommandListener(sender, this, "commands.recycler.spawn.novillage", new Object[0]);
+			LoggerUtils.debug(TextUtils.translate("commands.recycler.spawn.novillage", new Object[0]), true);
 			return;
 		}
 
 		BlockPos spawnPosition = village.getEdgeNode();
 		if (spawnPosition == null) {
 			notifyCommandListener(sender, this, "commands.recycler.spawn.noposition", new Object[0]);
+			LoggerUtils.debug(TextUtils.translate("commands.recycler.spawn.noposition", new Object[0]), true);
 			return;
 		}
 
@@ -66,6 +71,7 @@ public class CommandSpawn extends CommandVillageBase {
 		long recyclerTypeCount = entityList.stream().filter((r) -> r.getRecyclerType() == recyclerType).count();
         if (recyclerTypeCount > 0) {
 			notifyCommandListener(sender, this, "commands.recycler.spawn.exists", new Object[0]);
+			LoggerUtils.debug(TextUtils.translate("commands.recycler.spawn.exists", new Object[0]), true);
 			return;
         }
         
@@ -74,10 +80,12 @@ public class CommandSpawn extends CommandVillageBase {
 		
 		if (!entitySpawned) {
 			notifyCommandListener(sender, this, "commands.recycler.spawn.failed", new Object[0]);
+			LoggerUtils.debug(TextUtils.translate("commands.recycler.spawn.failed", new Object[0]), true);
 			return;
 		}
 		
 		notifyCommandListener(sender, this, "commands.recycler.spawn.success", new Object[] { TektopiaUtils.formatBlockPos(spawnPosition) });
+		LoggerUtils.debug(TextUtils.translate("commands.recycler.spawn.success", new Object[] { TektopiaUtils.formatBlockPos(spawnPosition) }), true);
 	}
     
 }
