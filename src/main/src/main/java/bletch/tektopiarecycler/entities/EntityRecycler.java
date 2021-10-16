@@ -16,6 +16,7 @@ import bletch.tektopiarecycler.core.ModEntities;
 import bletch.tektopiarecycler.entities.ai.EntityAIRecyclerPatrolPoint;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IMerchant;
+import net.minecraft.entity.INpc;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
@@ -50,7 +51,7 @@ import net.tangotek.tektopia.entities.ai.EntityAIReadBook;
 import net.tangotek.tektopia.entities.ai.EntityAIWanderStructure;
 import net.tangotek.tektopia.tickjob.TickJob;
 
-public class EntityRecycler extends EntityVillagerTek implements IMerchant {
+public class EntityRecycler extends EntityVillagerTek implements IMerchant, INpc {
 	
 	public static final String ENTITY_NAME = "recycler";
 	public static final String MODEL_NAME = "recycler";
