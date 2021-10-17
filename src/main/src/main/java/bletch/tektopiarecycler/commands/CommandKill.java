@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 import net.tangotek.tektopia.Village;
 import net.tangotek.tektopia.VillageManager;
 
-public class CommandKill extends CommandVillageBase {
+public class CommandKill extends RecyclerCommandBase {
 
 	private static final String COMMAND_NAME = "kill";
 	
