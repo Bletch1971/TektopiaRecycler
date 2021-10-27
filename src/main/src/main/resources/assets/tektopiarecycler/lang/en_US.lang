@@ -60,7 +60,7 @@ config.recycler.checksvillagesize.tooltip=If enabled, when trying to spawn a rec
 #============
 commands.recycler.usage=/recycler
 
-commands.recycler.spawn.usage=/recycler spawn <0|1>
+commands.recycler.spawn.usage=/recycler spawn <0|1> [me]
 commands.recycler.spawn.success=§aRecycler has appeared at %s
 commands.recycler.spawn.failed=§cRecycler spawn failed
 commands.recycler.spawn.badconditions=§cRecycler spawn failed...spawn conditions not valid
@@ -78,9 +78,8 @@ commands.recycler.kill.success=§aRecycler has been killed
 #=================
 
 message.recycler.exists=§eRecycler already located in village %s
-message.recycler.noposition=§cCould not find a spawn location for the Recycler
 message.recycler.noposition.village=§cCould not find a spawn location for the Recycler in village %s
-message.recycler.spawned=§aRecycler has appeared at %s
+message.recycler.spawned=§aRecycler has been spotted approaching the village
 message.recycler.spawned.village=§aRecycler has appeared in village %s at %s
 message.recycler.villagecheckfailed=§cRecycler village check failed, village  %s; size %s; check value %s
 message.recycler.villagechecksuccess=§cRecycler village check success, village  %s; size %s; check value %s

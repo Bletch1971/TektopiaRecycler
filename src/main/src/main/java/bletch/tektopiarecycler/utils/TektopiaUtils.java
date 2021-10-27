@@ -5,14 +5,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.ChunkProviderServer;
 import net.tangotek.tektopia.Village;
 import net.tangotek.tektopia.VillageManager;
 
 public class TektopiaUtils {
+
+	public static final int MAX_VILLAGE_LEVEL = 5;
+	public static final int MIN_VILLAGE_LEVEL = 1;
     
 	public static String formatBlockPos(BlockPos blockPos) {
     	if (blockPos == null) {
@@ -57,7 +64,31 @@ public class TektopiaUtils {
 			return 0;
 
 		int residentCount = village.getResidentCount();		
-		return Math.max(Math.min(residentCount / 10, 5), 1);
+		return Math.max(Math.min(residentCount / 10, MAX_VILLAGE_LEVEL), MIN_VILLAGE_LEVEL);
+	}
+
+	public static BlockPos getVillageSpawnPoint(World world, Village village) {
+		int retries = 3;
+		
+		while (retries-- > 0) {
+			BlockPos spawnPosition = village.getEdgeNode();
+
+			if (isChunkFullyLoaded(world, spawnPosition)) {
+				return spawnPosition;
+			}
+		}
+		
+		return null;
+	}
+
+	public static boolean isChunkFullyLoaded(World world, BlockPos pos) {
+		if (world == null || world.isRemote || pos == null) {
+			return true;
+		}
+
+		long i = ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4);
+		Chunk chunk = (Chunk)((ChunkProviderServer)world.getChunkProvider()).id2ChunkMap.get(i);
+		return chunk != null && !chunk.unloadQueued;
 	}
 
 	public static Boolean trySpawnEntity(World world, BlockPos spawnPosition, Function<World, ?> createFunc) {

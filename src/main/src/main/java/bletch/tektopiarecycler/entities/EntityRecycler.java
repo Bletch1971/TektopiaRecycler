@@ -13,7 +13,10 @@ import com.leviathanstudio.craftstudio.common.animation.AnimationHandler;
 import bletch.tektopiarecycler.core.ModConfig;
 import bletch.tektopiarecycler.core.ModDetails;
 import bletch.tektopiarecycler.core.ModEntities;
-import bletch.tektopiarecycler.entities.ai.EntityAIRecyclerPatrolPoint;
+import bletch.tektopiarecycler.entities.ai.EntityAILeaveVillage;
+import bletch.tektopiarecycler.entities.ai.EntityAIWanderVillage;
+import bletch.tektopiarecycler.entities.ai.EntityAIVisitVillage;
+import bletch.tektopiarecycler.utils.LoggerUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.INpc;
@@ -28,7 +31,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -46,7 +48,6 @@ import net.tangotek.tektopia.TekVillager;
 import net.tangotek.tektopia.Village;
 import net.tangotek.tektopia.VillagerRole;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
-import net.tangotek.tektopia.entities.ai.EntityAIGenericMove;
 import net.tangotek.tektopia.entities.ai.EntityAIReadBook;
 import net.tangotek.tektopia.entities.ai.EntityAIWanderStructure;
 import net.tangotek.tektopia.tickjob.TickJob;
@@ -71,117 +72,55 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant, INpc
 	private MerchantRecipeList vendorList;
 
 	public EntityRecycler(World worldIn) {
-		this(worldIn, 0);
+		super(worldIn, (ProfessionType)null, VillagerRole.VENDOR.value | VillagerRole.VISITOR.value);
 	}
 
 	public EntityRecycler(World worldIn, int recyclerType) {
-		super(worldIn, (ProfessionType)null, VillagerRole.VENDOR.value | VillagerRole.VISITOR.value);
-		this.sleepOffset = getSleepOffset();
+		this(worldIn);
+		
+		this.sleepOffset = 0;
 		
 		setRecyclerType(recyclerType);
 	}
 
-	public EntityRecycler(World worldIn, Village village, int recyclerType) {
-		this(worldIn, recyclerType);
-		attachToVillage(village);
+	protected void addTask(int priority, EntityAIBase task) {
+        if (task instanceof EntityAIWanderStructure && priority <= 100) {
+            return;
+        }
+        if (task instanceof EntityAIReadBook) {
+            return;
+        }
+        
+        super.addTask(priority, task);
 	}
 
-	public static List<Integer> getRecyclerTypes() {
-		return recyclerTypes;
-	}
-
-	public int getRecyclerType() {
-		return this.dataManager.get(RECYCLER_TYPE);
+	public void addVillagerPosition() {
 	}
 	
-	public static Boolean isRecyclerTypeValid(int recyclerType) {
-		for (int value : recyclerTypes) {
-			if (value == recyclerType)
-				return true;
-		}
+	public void attachToVillage(Village village) {
+		super.attachToVillage(village);
 		
-		return false;
-	}
-	
-	public boolean isMale() {
-		int recyclerType = this.getRecyclerType();
-		return recyclerType == 0;
-	}
-	
-	public void setRecyclerType(int recyclerType) {
-		this.dataManager.set(RECYCLER_TYPE, isRecyclerTypeValid(recyclerType) ? recyclerType : Integer.valueOf(0));
-	}
-	
-	protected void setupServerJobs() {
-		super.setupServerJobs();
-
-		this.addJob(new TickJob(100, 0, false, () -> {
-			this.prepStuck();
-		}));
-		
-		this.addJob(new TickJob(400, 0, false, () -> {
-			this.checkStuck();
-		}));
-		
-		this.addJob(new TickJob(50, 0, true, () -> {
-			if (this.isSleepingTime()) {
-				this.setDead();
-			}
-		}));
-		
-		this.addJob(new TickJob(300, 100, true, () -> {
-			if (!this.hasVillage() || !this.getVillage().isValid()) {
-				this.debugOut("Killing self...no village");
-				this.setDead();
-			}
-		}));
+		LoggerUtils.info("Attaching to village", true);
 	}
 
-	private void prepStuck() {
-		this.firstCheck = this.getPos();
-	}
-
-	private void checkStuck() {
-		if (this.firstCheck.distanceSq(this.getPos()) < 20.0D) {
-			this.debugOut("Recycler failed to find a way to the village.");
-			this.setDead();
-		}
-	}
-	
-	// initEntityAI
-	protected void func_184651_r() {
-		super.func_184651_r();
-
-		this.addTask(50, new EntityAIGenericMove(this, (p) -> {
-			return p.hasVillage() && Village.isNightTime(this.world);
-		}, (v) -> {
-			return this.village.getEdgeNode();
-		}, EntityVillagerTek.MovementMode.WALK, (Runnable)null, () -> {
-			this.debugOut("Killing self...left the village");
-			this.setDead();
-		}));
-		
-		this.addTask(50, new EntityAIRecyclerPatrolPoint(this, (p) -> {
-			return this.hasVillage();
-		}, 3, 60));
-		
-		this.addTask(50, new EntityAIGenericMove(this, (p) -> {
-			return !Village.isNightTime(this.world) && p.hasVillage() && !this.isTrading();
-		}, (v) -> {
-			return this.village.getLastVillagerPos();
-		}, EntityVillagerTek.MovementMode.WALK, (Runnable)null, (Runnable)null));
-	}
-
-	protected void initEntityAIBase() {
+	protected void bedCheck() {
 	}
 
 	public boolean canNavigate() {
 		return this.isTrading() ? false : super.canNavigate();
 	}
-	
-	// getNewNavigator
-	protected PathNavigate func_175447_b(World worldIn) {
-		return super.func_175447_b(worldIn);
+
+	private void checkStuck() {
+		if (this.firstCheck.distanceSq(this.getPos()) < 20.0D) {
+			LoggerUtils.info("Killing self...failed to find a way to the village.", true);
+			this.setDead();
+		}
+	}
+
+	protected void detachVillage() {
+		super.detachVillage();
+		
+		LoggerUtils.info("Detaching from village", true);
 	}
 	
 	// getAIMoveSpeed
@@ -189,20 +128,8 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant, INpc
 		return super.func_70689_ay() * 0.9F;
 	}
 
-	protected void addTask(int priority, EntityAIBase task) {
-		if (!(task instanceof EntityAIWanderStructure) || priority > 100) {
-			if (!(task instanceof EntityAIReadBook)) {
-				super.addTask(priority, task);
-			}
-		}
-	}
-
-	public void addVillagerPosition() {
-	}
-
-	public void setCustomer(@Nullable EntityPlayer player) {
-		this.buyingPlayer = player;
-		this.getNavigator().clearPath();
+	protected boolean getCanUseDoors() {
+		return true;
 	}
 
 	@Nullable
@@ -210,23 +137,15 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant, INpc
 		return this.buyingPlayer;
 	}
 
-	public boolean isTrading() {
-		return this.buyingPlayer != null;
+	public ITextComponent getDisplayName() {
+		ITextComponent itextcomponent = new TextComponentTranslation("entity." + MODEL_NAME + ".name", new Object[0]);
+		itextcomponent.getStyle().setHoverEvent(this.getHoverEvent());
+		itextcomponent.getStyle().setInsertion(this.getCachedUniqueIdString());
+		return itextcomponent;
 	}
 
-	protected void bedCheck() {
-	}
-
-	public boolean isSleepingTime() {
-		return isSleepingTime(this.world);
-	}
-
-	public boolean isWorkTime() {
-		return isWorkTime(this.world) && !this.world.isRaining();
-	}
-
-	public boolean isLearningTime() {
-		return false;
+	public BlockPos getPos() {
+		return new BlockPos(this);
 	}
 
 	@Nullable
@@ -238,25 +157,60 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant, INpc
 		return this.vendorList;
 	}
 
-	protected boolean getCanUseDoors() {
-		return true;
+	public int getRecyclerType() {
+		return this.dataManager.get(RECYCLER_TYPE);
+	}
+
+	public static List<Integer> getRecyclerTypes() {
+		return recyclerTypes;
+	}
+
+	public World getWorld() {
+		return this.world;
+	}
+
+	protected void initEntityAIBase() {
+		setupAITasks();
+	}
+
+	public boolean isFleeFrom(Entity e) {
+		return false;
+	}
+
+	public com.google.common.base.Predicate<Entity> isHostile() {
+		return (e) -> {
+			return false;
+		};
+	}
+
+	public boolean isLearningTime() {
+		return false;
 	}
 	
-	// processInteract
-	public boolean func_184645_a(EntityPlayer player, EnumHand hand) {
-		if (this.isEntityAlive() && !this.isTrading() && !this.isChild() && !player.isSneaking() && !this.world.isRemote) {
-			if (this.vendorList == null) {
-				this.populateBuyingList();
-			}
-
-			if (this.vendorList != null && !this.vendorList.isEmpty()) {
-				this.setCustomer(player);
-				player.displayVillagerTradeGui(this);
-				this.getNavigator().clearPath();
-			}
+	public boolean isMale() {
+		int recyclerType = this.getRecyclerType();
+		return recyclerType == 0;
+	}
+	
+	public static Boolean isRecyclerTypeValid(int recyclerType) {
+		for (int value : recyclerTypes) {
+			if (value == recyclerType)
+				return true;
 		}
+		
+		return false;
+	}
 
-		return true;
+	public boolean isSleepingTime() {
+		return false;
+	}
+
+	public boolean isTrading() {
+		return this.buyingPlayer != null;
+	}
+
+	public boolean isWorkTime() {
+		return isWorkTime(this.world, this.sleepOffset) && !this.world.isRaining();
 	}
 	
 	protected void populateBuyingList() {
@@ -303,12 +257,77 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant, INpc
 		}
 	}
 
+	private void prepStuck() {
+		this.firstCheck = this.getPos();
+	}
+	
+	// processInteract
+	public boolean func_184645_a(EntityPlayer player, EnumHand hand) {
+		if (this.isEntityAlive() && !this.isTrading() && !this.isChild() && !player.isSneaking() && !this.world.isRemote) {
+			if (this.vendorList == null) {
+				this.populateBuyingList();
+			}
+
+			if (this.vendorList != null && !this.vendorList.isEmpty()) {
+				this.setCustomer(player);
+				player.displayVillagerTradeGui(this);
+				this.getNavigator().clearPath();
+			}
+		}
+
+		return true;
+	}
+
+	public void setCustomer(@Nullable EntityPlayer player) {
+		this.buyingPlayer = player;
+		this.getNavigator().clearPath();
+	}
+
 	@SideOnly(Side.CLIENT)
 	public void setRecipes(@Nullable MerchantRecipeList recipeList) {
 	}
+	
+	public void setRecyclerType(int recyclerType) {
+		this.dataManager.set(RECYCLER_TYPE, isRecyclerTypeValid(recyclerType) ? recyclerType : Integer.valueOf(0));
+	}
+	
+	protected void setupAITasks() {
+		this.addTask(30, new EntityAILeaveVillage(this, 
+				(e) -> !e.isWorkTime(),  
+				(e) -> e.getVillage().getEdgeNode(), 
+				EntityVillagerTek.MovementMode.WALK, (Runnable)null, 
+				() -> {
+					LoggerUtils.info("Killing self...left the village", true);
+					this.setDead();
+				}
+		));
+		
+		this.addTask(40, new EntityAIWanderVillage(this, 
+				(e) -> e.isWorkTime(), 3, 60));
+		
+		this.addTask(50, new EntityAIVisitVillage(this, 
+				(e) -> e.isWorkTime() && !this.isTrading(), 
+				(e) -> e.getVillage().getLastVillagerPos(), 
+				EntityVillagerTek.MovementMode.WALK, (Runnable)null, (Runnable)null));
+	}
+	
+	protected void setupServerJobs() {
+		super.setupServerJobs();
 
-	public World getWorld() {
-		return this.world;
+		this.addJob(new TickJob(100, 0, false, 
+				() -> this.prepStuck()));
+		
+		this.addJob(new TickJob(400, 0, false, 
+				() -> this.checkStuck()));
+		
+		this.addJob(new TickJob(300, 100, true, 
+				() -> {
+					if (!this.hasVillage() || !this.getVillage().isValid()) {
+						LoggerUtils.info("Killing self...no village", true);
+						this.setDead();
+					}
+				}
+		));
 	}
 
 	public void useRecipe(MerchantRecipe recipe) {
@@ -332,37 +351,6 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant, INpc
         }
 	}
 
-	public ITextComponent getDisplayName() {
-		ITextComponent itextcomponent = new TextComponentTranslation("entity." + MODEL_NAME + ".name", new Object[0]);
-		itextcomponent.getStyle().setHoverEvent(this.getHoverEvent());
-		itextcomponent.getStyle().setInsertion(this.getCachedUniqueIdString());
-		return itextcomponent;
-	}
-
-	public com.google.common.base.Predicate<Entity> isHostile() {
-		return (e) -> {
-			return false;
-		};
-	}
-
-	public boolean isFleeFrom(Entity e) {
-		return false;
-	}
-
-	public BlockPos getPos() {
-		return new BlockPos(this);
-	}
-
-	// writeEntityToNBT
-	public void func_70014_b(NBTTagCompound compound) {
-		super.func_70014_b(compound);
-		
-		compound.setInteger("recyclerType", this.getRecyclerType());
-		if (this.vendorList != null) {
-			compound.setTag("Offers", this.vendorList.getRecipiesAsTags());
-		}
-	}
-
 	// readEntityFromNBT
 	public void func_70037_a(NBTTagCompound compound) {
 		super.func_70037_a(compound);
@@ -376,6 +364,16 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant, INpc
 		}
 	}
 
+	// writeEntityToNBT
+	public void func_70014_b(NBTTagCompound compound) {
+		super.func_70014_b(compound);
+		
+		compound.setInteger("recyclerType", this.getRecyclerType());
+		if (this.vendorList != null) {
+			compound.setTag("Offers", this.vendorList.getRecipiesAsTags());
+		}
+	}
+
 	static {
 		RECYCLER_TYPE = EntityDataManager.createKey(EntityRecycler.class, DataSerializers.VARINT);
 		ANIMATION_KEY = EntityDataManager.createKey(EntityRecycler.class, DataSerializers.STRING);
@@ -383,17 +381,9 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant, INpc
 		animationHandler = TekVillager.getNewAnimationHandler(EntityRecycler.class);
 		setupCraftStudioAnimations(animationHandler, ANIMATION_MODEL_NAME);
 	}
-	
-	public static int getSleepOffset() {
-		return 0;
-	}
 
-	public static boolean isSleepingTime(World world) {
-		return Village.isTimeOfDay(world, (long)(SLEEP_START_TIME + getSleepOffset()), (long)(SLEEP_END_TIME + getSleepOffset()));
-	}
-
-	public static boolean isWorkTime(World world) {
-		return Village.isTimeOfDay(world, (long)WORK_START_TIME, (long)WORK_END_TIME, (long)getSleepOffset());
+	public static boolean isWorkTime(World world, int sleepOffset) {
+		return Village.isTimeOfDay(world, (long)WORK_START_TIME, (long)WORK_END_TIME, (long)sleepOffset);
 	}
 	
 	protected static void setupCraftStudioAnimations(AnimationHandler<EntityRecycler> animationHandler, String modelName) {

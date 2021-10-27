@@ -26,9 +26,18 @@ public class CommandSpawn extends RecyclerCommandBase {
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-		if (args.length != 1) {
+		if (args.length < 1 || args.length > 2) {
 			throw new WrongUsageException(ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".usage", new Object[0]);
 		} 
+		
+		Boolean spawnNearMe = false;
+		if (args.length > 1) {
+			if (!args[1].equalsIgnoreCase("me")) {
+				throw new WrongUsageException(ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".usage", new Object[0]);
+			}
+			
+			spawnNearMe = true;
+		}
 		
 		int argValue = 0;
 		try {
@@ -41,7 +50,8 @@ public class CommandSpawn extends RecyclerCommandBase {
 		catch (Exception ex) {
 			throw new WrongUsageException(ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".usage", new Object[0]);
 		}
-        final int recyclerType = argValue;
+		
+        int recyclerType = argValue;
 		
 		EntityPlayer entityPlayer = super.getCommandSenderAsPlayer(sender);
 		World world = entityPlayer != null ? entityPlayer.getEntityWorld() : null;
@@ -54,13 +64,15 @@ public class CommandSpawn extends RecyclerCommandBase {
 		
 		VillageManager villageManager = world != null ? VillageManager.get(world) : null;
 		Village village = villageManager != null && entityPlayer != null ? villageManager.getVillageAt(entityPlayer.getPosition()) : null;
+		
 		if (village == null) {
 			notifyCommandListener(sender, this, ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".novillage", new Object[0]);
 			LoggerUtils.info(TextUtils.translate(ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".novillage", new Object[0]), true);
 			return;
 		}
 
-		BlockPos spawnPosition = village.getEdgeNode();
+		BlockPos spawnPosition = spawnNearMe ? entityPlayer.getPosition().north(2) : TektopiaUtils.getVillageSpawnPoint(world, village);
+		
 		if (spawnPosition == null) {
 			notifyCommandListener(sender, this, ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".noposition", new Object[0]);
 			LoggerUtils.info(TextUtils.translate(ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".noposition", new Object[0]), true);
@@ -69,6 +81,7 @@ public class CommandSpawn extends RecyclerCommandBase {
 
         List<EntityRecycler> entityList = world.getEntitiesWithinAABB(EntityRecycler.class, village.getAABB().grow(Village.VILLAGE_SIZE));
 		long recyclerTypeCount = entityList.stream().filter((r) -> r.getRecyclerType() == recyclerType).count();
+		
         if (recyclerTypeCount > 0) {
 			notifyCommandListener(sender, this, ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".exists", new Object[0]);
 			LoggerUtils.info(TextUtils.translate(ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".exists", new Object[0]), true);
@@ -76,9 +89,7 @@ public class CommandSpawn extends RecyclerCommandBase {
         }
         
 		// attempt to spawn the recycler
-		Boolean entitySpawned = TektopiaUtils.trySpawnEntity(world, spawnPosition, (World w) -> new EntityRecycler(w, recyclerType));
-		
-		if (!entitySpawned) {
+		if (!TektopiaUtils.trySpawnEntity(world, spawnPosition, (World w) -> new EntityRecycler(w, recyclerType))) {
 			notifyCommandListener(sender, this, ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".failed", new Object[0]);
 			LoggerUtils.info(TextUtils.translate(ModCommands.COMMAND_PREFIX + COMMAND_NAME + ".failed", new Object[0]), true);
 			return;

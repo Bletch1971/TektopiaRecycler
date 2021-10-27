@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
+import net.tangotek.tektopia.Village;
 import net.tangotek.tektopia.tickjob.TickJob;
 import net.tangotek.tektopia.tickjob.TickJobQueue;
 
@@ -39,10 +40,10 @@ public class ScheduleManager {
 	public void onWorldTick(WorldTickEvent e) {
 		this.jobs.tick();
 		
-		if (world.isDaytime()) {
-			this.schedulers.forEach((s) -> s.resetDay());
-		} else {
+		if (Village.isNightTime(world)) {
 			this.schedulers.forEach((s) -> s.resetNight());
+		} else {
+			this.schedulers.forEach((s) -> s.resetDay());
 		}
 	}
 

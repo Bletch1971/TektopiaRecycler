@@ -25,6 +25,8 @@ public class RecyclerScheduler implements IScheduler {
 	public void resetNight() {
 		if (this.resetNight)
 			return;
+		
+		LoggerUtils.info("RecyclerScheduler - resetNight called", true);
 
 		// if it is night time, then clear the village checks
 		this.checkedVillages = false;
@@ -34,8 +36,10 @@ public class RecyclerScheduler implements IScheduler {
 	@Override
 	public void update(World world) {
 		// do not process any further if we have already performed the check, it is raining or it is night
-		if (this.checkedVillages || world == null || world.isRaining() || Village.isNightTime(world))
+		if (this.checkedVillages || world == null || world.isRaining() || !EntityRecycler.isWorkTime(world, 0))
 			return;
+		
+		LoggerUtils.info("RecyclerScheduler - update called", true);
 		
 		this.resetNight = false;
 		this.checkedVillages = true;
@@ -54,8 +58,8 @@ public class RecyclerScheduler implements IScheduler {
 			for (int recyclerType : EntityRecycler.getRecyclerTypes()) {
 				
 				// get the village level (1-5) and test to spawn - bigger villages will reduce the number of spawns of the Recycler.
-				int villageLevel = ModConfig.recycler.checksVillageSize ? TektopiaUtils.getVillageLevel(v) : 1;
-				int villageCheck = world.rand.nextInt(villageLevel);
+				int villageLevel = TektopiaUtils.getVillageLevel(v);
+				int villageCheck = ModConfig.recycler.checksVillageSize ? world.rand.nextInt(villageLevel) : 0;
 				
 				if (villageLevel > 0 && villageCheck == 0) {
 					
@@ -66,16 +70,16 @@ public class RecyclerScheduler implements IScheduler {
 						entityList = world.getEntitiesWithinAABB(EntityRecycler.class, v.getAABB().grow(Village.VILLAGE_SIZE));
 					
 					long recyclerTypeCount = entityList.stream().filter((r) -> r.getRecyclerType() == recyclerType).count();
+					
 					if (recyclerTypeCount == 0) {
 						
-						BlockPos spawnPosition = v.getEdgeNode();
+						BlockPos spawnPosition = TektopiaUtils.getVillageSpawnPoint(world, v);
 
 						// attempt spawn
 						if (TektopiaUtils.trySpawnEntity(world, spawnPosition, (World w) -> new EntityRecycler(w, recyclerType))) {
-							v.sendChatMessage(new TextComponentTranslation("message.recycler.spawned", new Object[] { TektopiaUtils.formatBlockPos(spawnPosition) }));
+							v.sendChatMessage(new TextComponentTranslation("message.recycler.spawned", new Object[0]));
 							LoggerUtils.info(TextUtils.translate("message.recycler.spawned.village", new Object[] { villageName, TektopiaUtils.formatBlockPos(spawnPosition) }), true);
 						} else {
-							v.sendChatMessage(new TextComponentTranslation("message.recycler.noposition", new Object[0]));
 							LoggerUtils.info(TextUtils.translate("message.recycler.noposition.village", new Object[] { villageName }), true);
 						}
 						
