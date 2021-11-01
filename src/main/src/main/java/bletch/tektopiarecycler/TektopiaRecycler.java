@@ -4,7 +4,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.leviathanstudio.craftstudio.client.registry.CraftStudioLoader;
 
-import bletch.tektopiarecycler.core.ModCommands;
+import bletch.tektopiarecycler.commands.RecyclerCommands;
 import bletch.tektopiarecycler.core.ModCommonProxy;
 import bletch.tektopiarecycler.core.ModDetails;
 import bletch.tektopiarecycler.core.ModEntities;
@@ -60,14 +60,15 @@ public class TektopiaRecycler {
     
 	@Mod.EventHandler
 	public void onServerStarting(final FMLServerStartingEvent e) {
-		
-		LoggerUtils.info("Starting registerServerCommand...");
-		// register commands
-		ModCommands commands = new ModCommands();
+
+		LoggerUtils.info("Starting command registrations...");
+
+		LoggerUtils.info("Registering recycler commands");
+		RecyclerCommands commands = new RecyclerCommands();
 		e.registerServerCommand(commands);
 		commands.registerNodes();
-		
-		LoggerUtils.info("Finished registerServerCommand...");
+
+		LoggerUtils.info("Finished command registrations");
 		
 		World world = e.getServer().getEntityWorld();
 		
@@ -77,7 +78,7 @@ public class TektopiaRecycler {
 		scheduleManager = new ScheduleManager(world);
 		scheduleManager.addScheduler(new RecyclerScheduler());
 		
-		LoggerUtils.info("Finished ScheduleManager setup...");
+		LoggerUtils.info("Finished ScheduleManager setup");
 	}
 	
     @EventBusSubscriber

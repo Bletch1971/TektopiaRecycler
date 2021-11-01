@@ -3,18 +3,17 @@ package bletch.tektopiarecycler.commands;
 import java.util.Collections;
 import java.util.List;
 
-import bletch.tektopiarecycler.core.ModCommands;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.server.permission.PermissionAPI;
 
-public abstract class RecyclerCommandBase extends CommandBase {
+public abstract class CommandRecyclerBase extends CommandBase {
 	
 	protected final String name;
 
-	public RecyclerCommandBase(String name) {
+	public CommandRecyclerBase(String name) {
 		this.name = name;
 	}
 
@@ -30,13 +29,13 @@ public abstract class RecyclerCommandBase extends CommandBase {
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return ModCommands.COMMAND_PREFIX + this.name + ".usage";
+		return RecyclerCommands.COMMAND_PREFIX + this.name + ".usage";
 	}
 	
 	@Override
     public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
 		try {
-			return PermissionAPI.hasPermission(super.getCommandSenderAsPlayer(sender), ModCommands.COMMAND_PREFIX_WITH_MODID + this.getName());
+			return PermissionAPI.hasPermission(super.getCommandSenderAsPlayer(sender), RecyclerCommands.COMMAND_PREFIX_WITH_MODID + this.getName());
 		} catch (PlayerNotFoundException ex) {
 			ex.printStackTrace();
 			return false;

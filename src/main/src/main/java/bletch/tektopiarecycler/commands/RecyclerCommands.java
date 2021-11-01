@@ -1,21 +1,20 @@
-package bletch.tektopiarecycler.core;
+package bletch.tektopiarecycler.commands;
 
-import bletch.tektopiarecycler.commands.CommandKill;
-import bletch.tektopiarecycler.commands.CommandSpawn;
+import bletch.tektopiarecycler.core.ModDetails;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
 
-public class ModCommands extends CommandTreeBase {
+public class RecyclerCommands extends CommandTreeBase {
 
 	public static final String COMMAND_PREFIX = "commands.recycler.";
 	public static final String COMMAND_PREFIX_WITH_MODID = ModDetails.MOD_ID + "." + COMMAND_PREFIX;
 	
-	public ModCommands() {
-		super.addSubcommand(new CommandKill());
-		super.addSubcommand(new CommandSpawn());
+	public RecyclerCommands() {
+		super.addSubcommand(new CommandRecyclerKill());
+		super.addSubcommand(new CommandRecyclerSpawn());
 	}
 
 	public void registerNodes() {
