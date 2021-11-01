@@ -70,7 +70,7 @@ public class CommandRecyclerSpawn extends CommandRecyclerBase {
 			return;
 		}
 
-		BlockPos spawnPosition = spawnNearMe ? entityPlayer.getPosition().north(2) : TektopiaUtils.getVillageSpawnPoint(world, village);
+		BlockPos spawnPosition = spawnNearMe ? entityPlayer.getPosition() : TektopiaUtils.getVillageSpawnPoint(world, village);
 		
 		if (spawnPosition == null) {
 			notifyCommandListener(sender, this, RecyclerCommands.COMMAND_PREFIX + COMMAND_NAME + ".noposition", new Object[0]);

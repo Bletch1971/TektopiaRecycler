@@ -178,9 +178,7 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant, INpc
 	}
 
 	public com.google.common.base.Predicate<Entity> isHostile() {
-		return (e) -> {
-			return false;
-		};
+		return (e) -> false;
 	}
 
 	public boolean isLearningTime() {
@@ -188,8 +186,7 @@ public class EntityRecycler extends EntityVillagerTek implements IMerchant, INpc
 	}
 	
 	public boolean isMale() {
-		int recyclerType = this.getRecyclerType();
-		return recyclerType == 0;
+		return this.getRecyclerType() == 0;
 	}
 	
 	public static Boolean isRecyclerTypeValid(int recyclerType) {

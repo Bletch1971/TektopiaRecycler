@@ -10,6 +10,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.tangotek.tektopia.Village;
 import net.tangotek.tektopia.VillageManager;
@@ -24,20 +25,22 @@ public class CommandRecyclerKill extends CommandRecyclerBase {
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-		if (args.length != 1) {
+		if (args.length > 1) {
 			throw new WrongUsageException(RecyclerCommands.COMMAND_PREFIX + COMMAND_NAME + ".usage", new Object[0]);
 		} 
 		
-		int argValue = 0;
-		try {
-			argValue = Integer.parseInt(args[0]);
-			
-			if (!EntityRecycler.isRecyclerTypeValid(argValue)) {
+		int argValue = -1;
+		if (args.length > 0) {
+			try {
+				argValue = Integer.parseInt(args[0]);
+				
+				if (!EntityRecycler.isRecyclerTypeValid(argValue)) {
+					throw new WrongUsageException(RecyclerCommands.COMMAND_PREFIX + COMMAND_NAME + ".usage", new Object[0]);
+				}
+			}
+			catch (Exception ex) {
 				throw new WrongUsageException(RecyclerCommands.COMMAND_PREFIX + COMMAND_NAME + ".usage", new Object[0]);
 			}
-		}
-		catch (Exception ex) {
-			throw new WrongUsageException(RecyclerCommands.COMMAND_PREFIX + COMMAND_NAME + ".usage", new Object[0]);
 		}
         final int recyclerType = argValue;
 		
@@ -53,9 +56,11 @@ public class CommandRecyclerKill extends CommandRecyclerBase {
 		}
 
         List<EntityRecycler> entityList = world.getEntitiesWithinAABB(EntityRecycler.class, village.getAABB().grow(Village.VILLAGE_SIZE));
-		entityList = entityList.stream()
-				.filter((r) -> r.getRecyclerType() == recyclerType)
-				.collect(Collectors.toList());
+        if (recyclerType != -1) {
+    		entityList = entityList.stream()
+    				.filter((r) -> r.getRecyclerType() == recyclerType)
+    				.collect(Collectors.toList());
+        }
         if (entityList.size() == 0) {
 			notifyCommandListener(sender, this, RecyclerCommands.COMMAND_PREFIX + COMMAND_NAME + ".noexists", new Object[0]);
 			LoggerUtils.info(TextUtils.translate(RecyclerCommands.COMMAND_PREFIX + COMMAND_NAME + ".noexists", new Object[0]), true);
@@ -67,9 +72,11 @@ public class CommandRecyclerKill extends CommandRecyclerBase {
         		continue;
         	
         	entity.setDead();
+        	
+        	String name = (entity.isMale() ? TextFormatting.BLUE : TextFormatting.LIGHT_PURPLE) + entity.getName();
     		
-    		notifyCommandListener(sender, this, RecyclerCommands.COMMAND_PREFIX + COMMAND_NAME + ".success", new Object[0]);
-    		LoggerUtils.info(TextUtils.translate(RecyclerCommands.COMMAND_PREFIX + COMMAND_NAME + ".success", new Object[0]), true);
+    		notifyCommandListener(sender, this, RecyclerCommands.COMMAND_PREFIX + COMMAND_NAME + ".success", new Object[] { name });
+    		LoggerUtils.info(TextUtils.translate(RecyclerCommands.COMMAND_PREFIX + COMMAND_NAME + ".success", new Object[] { name }), true);
         }
 	}
     

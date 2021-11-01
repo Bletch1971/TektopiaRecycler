@@ -60,18 +60,18 @@ config.recycler.checksvillagesize.tooltip=If enabled, when trying to spawn a rec
 #============
 commands.recycler.usage=/recycler
 
+commands.recycler.kill.usage=/recycler kill [0|1]
+commands.recycler.kill.novillage=§cRecycler kill failed...no village found
+commands.recycler.kill.noexists=§eRecycler kill failed...Recycler not located in the village
+commands.recycler.kill.success=§aRecycler [%s§a] has been killed
+
 commands.recycler.spawn.usage=/recycler spawn <0|1> [me]
-commands.recycler.spawn.success=§aRecycler has appeared at %s
-commands.recycler.spawn.failed=§cRecycler spawn failed
 commands.recycler.spawn.badconditions=§cRecycler spawn failed...spawn conditions not valid
 commands.recycler.spawn.exists=§eRecycler spawn failed...Recycler already located in the village
 commands.recycler.spawn.noposition=§cRecycler spawn failed...no spawn position found
 commands.recycler.spawn.novillage=§cRecycler spawn failed...no village found
-
-commands.recycler.kill.usage=/recycler kill <0|1>
-commands.recycler.kill.novillage=§cRecycler kill failed...no village found
-commands.recycler.kill.noexists=§eRecycler kill failed...Recycler not located in the village
-commands.recycler.kill.success=§aRecycler has been killed
+commands.recycler.spawn.failed=§cRecycler spawn failed
+commands.recycler.spawn.success=§aRecycler has appeared at %s
 
 #=================
 #= Chat Messages =

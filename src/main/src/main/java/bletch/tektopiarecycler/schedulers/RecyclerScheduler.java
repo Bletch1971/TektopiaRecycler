@@ -54,11 +54,11 @@ public class RecyclerScheduler implements IScheduler {
 
 			List<EntityRecycler> entityList = null;
 			String villageName = v.getName();
+			int villageLevel = TektopiaUtils.getVillageLevel(v);
 			
 			for (int recyclerType : EntityRecycler.getRecyclerTypes()) {
 				
 				// get the village level (1-5) and test to spawn - bigger villages will reduce the number of spawns of the Recycler.
-				int villageLevel = TektopiaUtils.getVillageLevel(v);
 				int villageCheck = ModConfig.recycler.checksVillageSize ? world.rand.nextInt(villageLevel) : 0;
 				
 				if (villageLevel > 0 && villageCheck == 0) {
