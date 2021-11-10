@@ -22,7 +22,7 @@ public class EntityAIWanderVillage extends EntityAIPatrolPoint {
 
     @Override
     public boolean shouldExecute() {
-        return this.villager.isAITick() && this.navigator.hasVillage() && this.shouldPred.test(this.villager) && super.func_75250_a();
+        return this.villager.isAITick() && this.navigator.hasVillage() && this.shouldPred.test(this.villager) && super.shouldExecute();
     }
 
     protected BlockPos getPatrolPoint() {
