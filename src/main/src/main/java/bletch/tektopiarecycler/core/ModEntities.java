@@ -1,5 +1,6 @@
 package bletch.tektopiarecycler.core;
 
+import bletch.common.core.CommonEntities;
 import bletch.tektopiarecycler.entities.EntityRecycler;
 import bletch.tektopiarecycler.entities.render.RenderRecycler;
 import net.minecraft.util.ResourceLocation;
@@ -10,16 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 
-public class ModEntities {
-
-    public static final String ANIMATION_VILLAGER_EAT = "villager_eat";
-    public static final String ANIMATION_VILLAGER_READ = "villager_read";
-    public static final String ANIMATION_VILLAGER_RUN = "villager_run";
-    public static final String ANIMATION_VILLAGER_SIT = "villager_sit";
-    public static final String ANIMATION_VILLAGER_SITCHEER = "villager_sit_cheer";
-    public static final String ANIMATION_VILLAGER_SLEEP = "villager_sleep";
-    public static final String ANIMATION_VILLAGER_WALK = "villager_walk";
-    public static final String ANIMATION_VILLAGER_WALKSAD = "villager_walk_sad";
+public class ModEntities extends CommonEntities {
 
     public static void register(IForgeRegistry<EntityEntry> registry) {
         int id = 1;

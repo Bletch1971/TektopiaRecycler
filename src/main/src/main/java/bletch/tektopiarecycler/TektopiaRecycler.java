@@ -1,11 +1,11 @@
 package bletch.tektopiarecycler;
 
+import bletch.common.schedulers.ScheduleManager;
 import bletch.tektopiarecycler.commands.RecyclerCommands;
 import bletch.tektopiarecycler.core.ModCommonProxy;
 import bletch.tektopiarecycler.core.ModDetails;
 import bletch.tektopiarecycler.core.ModEntities;
 import bletch.tektopiarecycler.schedulers.RecyclerScheduler;
-import bletch.tektopiarecycler.schedulers.ScheduleManager;
 import bletch.tektopiarecycler.utils.LoggerUtils;
 import com.leviathanstudio.craftstudio.client.registry.CraftStudioLoader;
 import net.minecraft.world.World;
@@ -44,8 +44,8 @@ public class TektopiaRecycler {
     public void preInitialize(FMLPreInitializationEvent e) {
         instance = this;
 
-        proxy.preInitialize(e);
         proxy.resetDebug();
+        proxy.preInitialize(e);
     }
 
     @Mod.EventHandler
