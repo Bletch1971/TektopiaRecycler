@@ -61,24 +61,24 @@ public class TektopiaRecycler {
     @Mod.EventHandler
     public void onServerStarting(final FMLServerStartingEvent e) {
 
-        LoggerUtils.info("Starting command registrations...");
+        LoggerUtils.instance.info("Starting command registrations...");
 
-        LoggerUtils.info("Registering recycler commands");
+        LoggerUtils.instance.info("Registering recycler commands");
         RecyclerCommands commands = new RecyclerCommands();
         e.registerServerCommand(commands);
         commands.registerNodes();
 
-        LoggerUtils.info("Finished command registrations");
+        LoggerUtils.instance.info("Finished command registrations");
 
         World world = e.getServer().getEntityWorld();
 
-        LoggerUtils.info("Starting ScheduleManager setup...");
+        LoggerUtils.instance.info("Starting ScheduleManager setup...");
 
         // create the schedule manager
         scheduleManager = new ScheduleManager(world);
         scheduleManager.addScheduler(new RecyclerScheduler());
 
-        LoggerUtils.info("Finished ScheduleManager setup");
+        LoggerUtils.instance.info("Finished ScheduleManager setup");
     }
 
     @EventBusSubscriber

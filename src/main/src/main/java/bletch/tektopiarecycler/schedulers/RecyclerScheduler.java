@@ -27,7 +27,7 @@ public class RecyclerScheduler implements IScheduler {
         if (this.resetNight)
             return;
 
-        LoggerUtils.info("RecyclerScheduler - resetNight called", true);
+        LoggerUtils.instance.info("RecyclerScheduler - resetNight called", true);
 
         // if it is nighttime, then clear the village checks
         this.checkedVillages = false;
@@ -40,7 +40,7 @@ public class RecyclerScheduler implements IScheduler {
         if (this.checkedVillages || world == null || world.isRaining() || !EntityRecycler.isWorkTime(world, 0))
             return;
 
-        LoggerUtils.info("RecyclerScheduler - update called", true);
+        LoggerUtils.instance.info("RecyclerScheduler - update called", true);
 
         this.resetNight = false;
         this.checkedVillages = true;
@@ -64,7 +64,7 @@ public class RecyclerScheduler implements IScheduler {
 
                 if (villageLevel > 0 && villageCheck == 0) {
 
-                    LoggerUtils.info(TextUtils.translate("message.recycler.villagechecksuccess", villageName, villageLevel, villageCheck), true);
+                    LoggerUtils.instance.info(TextUtils.translate("message.recycler.villagechecksuccess", villageName, villageLevel, villageCheck), true);
 
                     // get a list of the Recyclers in the village
                     if (entityList == null)
@@ -79,17 +79,17 @@ public class RecyclerScheduler implements IScheduler {
                         // attempt spawn
                         if (TektopiaUtils.trySpawnEntity(world, spawnPosition, (World w) -> new EntityRecycler(w, recyclerType))) {
                             v.sendChatMessage(new TextComponentTranslation("message.recycler.spawned"));
-                            LoggerUtils.info(TextUtils.translate("message.recycler.spawned.village", villageName, TektopiaUtils.formatBlockPos(spawnPosition)), true);
+                            LoggerUtils.instance.info(TextUtils.translate("message.recycler.spawned.village", villageName, TektopiaUtils.formatBlockPos(spawnPosition)), true);
                         } else {
-                            LoggerUtils.info(TextUtils.translate("message.recycler.noposition.village", villageName), true);
+                            LoggerUtils.instance.info(TextUtils.translate("message.recycler.noposition.village", villageName), true);
                         }
 
                     } else {
-                        LoggerUtils.info(TextUtils.translate("message.recycler.exists", villageName), true);
+                        LoggerUtils.instance.info(TextUtils.translate("message.recycler.exists", villageName), true);
                     }
 
                 } else {
-                    LoggerUtils.info(TextUtils.translate("message.recycler.villagecheckfailed", villageName, villageLevel, villageCheck), true);
+                    LoggerUtils.instance.info(TextUtils.translate("message.recycler.villagecheckfailed", villageName, villageLevel, villageCheck), true);
                 }
             }
         });
